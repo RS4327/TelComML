@@ -30,7 +30,7 @@ class DataIngestion:
          
         logging.info('Step 1: Enter into the Data Pre Processing')
         try:
-            df=pd.read_csv('notebook/data/Fraud_Detection_Data_Usage.csv')
+            df=pd.read_csv('notebook/data/Fraud_Detection_Data_Usage_new.csv')
             os.makedirs(os.path.dirname(self.ingestion_config.raw_data_path),exist_ok=True)
             df.to_csv(self.ingestion_config.raw_data_path,index=False,header=True)
             
