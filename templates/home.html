@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Voice/SMS Performance</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(to right, #d3cce3, #e9e4f0);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .form-container {
+      background: #fff;
+      padding: 30px 40px;
+      border-radius: 12px;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+      width: 420px;
+    }
+
+    h1, h2 {
+      text-align: center;
+      color: #333;
+      margin: 0 0 15px;
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    label {
+      margin-bottom: 5px;
+      font-weight: bold;
+      color: #444;
+    }
+
+    select, input[type="number"] {
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 6.5px;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      font-size: 6.5px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-top: 10px;
+      transition: background-color 0.3s;
+    }
+
+    button:hover {
+      background-color: #388e3c;
+    }
+
+    .header-box {
+      background-color: #e3f2fd;
+      border: 2px solid #2196F3;
+      border-radius: 10px;
+      padding: 20px;
+      margin-bottom: 25px;
+      text-align: center;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+
+    .header-box h2 {
+      color: #0d47a1;
+      font-size: 18px;
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="form-container">
+    <form action="{{ url_for('predict_datapoint') }}" method="post">
+      <div class="header-box">
+        <h2>Voice Call Fraud Performance Prediction</h2>
+        <marquee behavior="scroll" direction="right">
+          <span style="color: red;">
+            Use this form to predict a Voice Call Fraud detection.
+          </span>
+        </marquee>
+      </div>
+
+      <div class="form-group">
+        <label>CALL_TYPE</label>
+        <select name="CALL_TYPE" required>
+          <option selected disabled value="">Select your Call Type</option>
+          <option value="SMS">SMS</option>
+          <option value="Voice">VOICE</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>CHARGE</label>
+        <input type="number" name="CHARGE" placeholder="Enter call CHARGE" min="0" max="1000" required />
+      </div>
+
+      <div class="form-group">
+        <label>CALL_RESUL</label>
+        <select name="CALL_RESUL" required>
+          <option selected disabled value="">Select Call Result</option>
+          <option value="ANSWERED">ANSWERED</option>
+          <option value="BUSY">BUSY</option>
+          <option value="DECLINED">DECLINED</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>CALL_TO</label>
+        <select name="CALL_TO" required>
+          <option selected disabled value="">Select CALL_TO</option>
+          <option value="domestic">domestic</option>
+          <option value="international">international</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>FEQ</label>
+        <input type="number" name="FEQ" placeholder="Enter call FEQ" min="0" max="100" required />
+      </div>
+
+      <div class="form-group">
+        <label>DURATION</label>
+        <input type="number" name="DURATION" placeholder="Enter call DURATION" min="0" max="100" required />
+      </div>
+
+      <div class="form-group">
+        <label>START_HOUR</label>
+        <input type="number" name="START_HOUR" placeholder="Enter call START_HOUR" min="0" max="100" required />
+      </div>
+
+      <div class="form-group" style="text-align: center;">
+        <button type="submit">FRAUD OR NOT</button>
+      </div>
+    </form>
+
+    {% if results is defined and results is not none %}
+    <style>
+      /* Overlay background */
+      .overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(0, 0, 0, 0.6);
+        z-index: 999;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      /* Modal Box */
+      .custom-alert {
+        background-color: #fffbe6;
+        color: #333;
+        padding: 25px 30px;
+        border-radius: 10px;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        text-align: center;
+        font-size: 18px;
+        font-weight: bold;
+        max-width: 400px;
+      }
+
+      .custom-alert button {
+        margin-top: 15px;
+        padding: 10px 20px;
+        background-color: #4CAF50;
+        border: none;
+        color: white;
+        border-radius: 5px;
+        font-weight: bold;
+        cursor: pointer;
+      }
+
+      .custom-alert button:hover {
+        background-color: #388e3c;
+      }
+    </style>
+
+    <div class="overlay" id="popupAlert">
+      <div class="custom-alert">
+        🚨 This is {{ results }} voice call or SMS that you have just received.
+        <br />
+        <button onclick="closeAlert()">OK</button>
+      </div>
+    </div>
+
+    <script>
+      function closeAlert() {
+        document.getElementById("popupAlert").style.display = "none";
+      }
+    </script>
+    {% endif %}
+  </div>
+
+</body>
+</html>
